@@ -1,0 +1,9 @@
+.hotmanga_container{
+  border:1px solid black;
+  width: 100%;
+  max-width: 1250px;
+  height: 270px;
+  .hotmanga_image{
+    display: flex;
+  }
+}
