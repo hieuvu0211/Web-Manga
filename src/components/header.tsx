@@ -1,15 +1,15 @@
 'use client'
 import "../styles/header.scss";
 import Image from "next/image";
-
+import Link from "next/link";
 export default function Header() {
     return (
         <>
-            <div className="hed flex mx-auto bg-gray-600 items-center">
-                <div className="head_logo">
+            <div className="hed flex mx-auto items-center">
+                <Link className="head_logo" href={"/"}>
                     <Image src={"/images/logo/Logo.png"} alt={"truyen"} width={100}
-                           height={100} className="rounded"/>
-                </div>
+                           height={100} className="rounded cursor-pointer"/>
+                </Link>
                 <div className="flex head_middle items-center ml-52">
                     <div className="flex head_search mx-0.5 bg-amber-50 rounded">
                         <input type="text" className="" placeholder=" Tìm truyện... "/>
@@ -47,9 +47,9 @@ export default function Header() {
                         hi,guest
                     </button>
                     <ul className=" px-3 options">
-                        <li>Profile</li>
-                        <li>Cart</li>
-                        <li>Log out</li>
+                        <li>Thông tin</li>
+                        <li>Theo dõi</li>
+                        <li>Đăng xuất</li>
                     </ul>
                 </div>
             </div>

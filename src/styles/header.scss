@@ -1,8 +1,8 @@
 .hed {
-  border: 1px solid black;
   width: 100%;
   max-width: 1500px;
   height: 10vh;
+  background-image: url(/images/logo/megumi-bg.jpg);
 
   .head_logo {
     width: 20%;
@@ -16,11 +16,10 @@
 
     .head_search {
       width: 70%;
-      border: 1px solid yellow;
-
       input {
         width: 95%;
         height: 30px;
+        border-radius: 10px;
 
         &:focus {
           outline: none;
