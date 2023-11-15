@@ -12,7 +12,7 @@ export default function FollowManga() {
                 </div>
                 <div className="fl_content flex pl-3.5">
                     <Image src={'/images/manga/example1.jpg'} alt={"#"}
-                    width={100}
+                           width={100}
                     height={100}
                     className="image cursor-pointer"/>
                     <div className="fl_content1">
