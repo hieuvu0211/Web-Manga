@@ -1,16 +1,15 @@
 "use client";
-import "../styles/test.scss";
-import Image from "next/image";
+import "../../styles/truyen-theo-doi.scss";
 import Link from "next/link";
-
-export default function ListManga() {
+import Image from "next/image";
+export default function Home() {
   return (
     <>
-      <div className="ml-1 font-semibold text-blue-700 font text-2xl">
+      <div className="ml-16 font-semibold text-blue-700 font text-2xl">
         Truyện mới cập nhật {">"}
       </div>
-      <div className="list_container mx-auto mt-1 ml-1 gap-3">
-        <div className="list_item items-center">
+      <div className="followPage_container mx-auto mt-1 ml-1 gap-3">
+        <div className="follow_item items-center">
           <Link href={"/truyen/gachiakuta"} className="cursor-pointer">
             <Image
               src={"/images/manga/gachiakuta.jpg"}
@@ -25,7 +24,7 @@ export default function ListManga() {
           <div className="italic cursor-pointer">Chap 9</div>
           <div className="italic cursor-pointer">...</div>
         </div>
-        <div className="list_item">
+        <div className="follow_item">
           <Link href={"/truyen/gofun-go-no-sekai"} className="cursor-pointer">
             <Image
               src={"/images/manga/gofun-go-no-sekai.jpg"}
@@ -40,7 +39,7 @@ export default function ListManga() {
           <div className="italic">Chap 86</div>
           <div className="italic">...</div>
         </div>
-        <div className="list_item">
+        <div className="follow_item">
           <Link
             href={"truyen/hiep-sy-cong-chua-la-nang-dau-toc-man-di-9983"}
             className="cursor-pointer"
@@ -62,7 +61,7 @@ export default function ListManga() {
           <div className="italic">Chap 44</div>
           <div className="italic">...</div>
         </div>
-        <div className="list_item">
+        <div className="follow_item">
           <Link
             href={"/truyen/isekai-death-game-ni-tensou-sarete-tsura-5655"}
             className="cursor-pointer"
@@ -84,7 +83,7 @@ export default function ListManga() {
           <div className="italic">Chap 64</div>
           <div className="italic">...</div>
         </div>
-        <div className="list_item">
+        <div className="follow_item">
           <Link href={"/kajiki-no-ryourinin"} className="cursor-pointer">
             <Image
               src={"/images/manga/kajiki-no-ryourinin.jpg"}
@@ -99,7 +98,7 @@ export default function ListManga() {
           <div className="italic">Chap 73</div>
           <div className="italic">...</div>
         </div>
-        <div className="list_item">
+        <div className="follow_item">
           <Link
             href={"/truyen/ke-ca-ban-sao-cung-biet-yeu"}
             className="cursor-pointer"
@@ -119,7 +118,7 @@ export default function ListManga() {
           <div className="italic">Chap 122</div>
           <div className="italic">...</div>
         </div>
-        <div className="list_item">
+        <div className="follow_item">
           <Link href={"/truyen/kimi-wa-meido-sama"} className="cursor-pointer">
             <Image
               src={"/images/manga/kimi-wa-meido-sama.jpg"}
@@ -134,7 +133,7 @@ export default function ListManga() {
           <div className="italic">Chap 22</div>
           <div className="italic">...</div>
         </div>
-        <div className="list_item">
+        <div className="follow_item">
           <Link
             href={"/truyen/loi-nguyen-van-chua-cham-dut"}
             className="cursor-pointer"
@@ -154,7 +153,7 @@ export default function ListManga() {
           <div className="italic">Chap 9</div>
           <div className="italic">...</div>
         </div>
-        <div className="list_item">
+        <div className="follow_item">
           <Link
             href={"/truyen/long-lay-phut-lia-doi"}
             className="cursor-pointer"
@@ -172,7 +171,7 @@ export default function ListManga() {
           <div className="italic">Chap 4</div>
           <div className="italic">...</div>
         </div>
-        <div className="list_item">
+        <div className="follow_item">
           <Link href={"/truyen/ngon-linh-vuong"} className="cursor-pointer">
             <Image
               src={"/images/manga/ngon-linh-vuong.jpg"}
@@ -187,7 +186,7 @@ export default function ListManga() {
           <div className="italic">Chap 6</div>
           <div className="italic">...</div>
         </div>
-        <div className="list_item">
+        <div className="follow_item">
           <Link
             href={"/truyen/shishidou-san-ni-shikararetai"}
             className="cursor-pointer"
@@ -207,7 +206,7 @@ export default function ListManga() {
           <div className="italic">Chap 2</div>
           <div className="italic">...</div>
         </div>
-        <div className="list_item">
+        <div className="follow_item">
           <Link href={"/truyen/kajiki-no-ryourinin"} className="cursor-pointer">
             <Image
               src={"/images/manga/kajiki-no-ryourinin.jpg"}
