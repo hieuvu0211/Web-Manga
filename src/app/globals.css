@@ -2,3 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+  font-family: mono !important;
+  background-color: rgba(128, 128, 128, 0.2) !important;
+}

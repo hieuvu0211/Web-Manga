@@ -70,7 +70,7 @@ export default function Header() {
             hi,guest
           </button>
           <ul className=" px-3 options">
-            <li>Thông tin</li>
+            <li onClick={() => router.push("/user")}>Trang cá nhân</li>
             <li onClick={() => router.push("/truyen-theo-doi")}>Theo dõi</li>
             <li>Đăng xuất</li>
           </ul>
