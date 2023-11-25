@@ -1,19 +1,86 @@
 "use client";
+import { useEffect, useState } from "react";
 import "../../../../styles/truyen.scss";
 import { useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
+import axios from "axios";
 export default function Home(props: any) {
+  const searchParams = useSearchParams();
+  const chapter = searchParams.get("c");
+  const title = searchParams.get("title");
+  const [imageUrls, setImageUrls] = useState([null]);
+  const [numberChapters, setNumberChapters] = useState<any>(null);
+  const [selectedOption, setSelectedOption] = useState<any>();
+  useEffect(() => {
+    setSelectedOption(`${chapter}`);
+    const fetchData = async () => {
+      // let numberOfpage: any;
+      const newImageUrls: any[] = [];
+      try {
+        const numberOfpage = await axios(
+          `http://localhost:8000/${title}/chapter${chapter}`
+        );
+
+        const numberOfChapter = await axios(
+          `http://localhost:8000/manga/${title}`
+        );
+        const soChapter = await numberOfChapter.data.numberChapter;
+        setNumberChapters(soChapter);
+        const result = await numberOfpage.data.number;
+        if (numberOfpage) {
+          for (let i = 0; i < result; i++) {
+            if (i < 9) {
+              try {
+                const response = await fetch(
+                  `http://localhost:8000/${title}/chapter${chapter}/0${i + 1}`
+                );
+                const data = await response.json();
+
+                newImageUrls.push(data);
+              } catch (error) {
+                console.error(`Error fetching image ${i + 1}:`, error);
+              }
+            } else {
+              try {
+                const response = await fetch(
+                  `http://localhost:8000/${title}/chapter${chapter}/${i + 1}`
+                );
+                const data = await response.json();
+
+                newImageUrls.push(data);
+              } catch (error) {
+                console.error(`Error fetching image ${i + 1}:`, error);
+              }
+            }
+          }
+
+          setImageUrls(newImageUrls);
+        }
+      } catch (error) {
+        console.log("failed fetching image");
+      }
+    };
+    fetchData();
+  }, []);
+  const handleSelectChange = (e: any) => {
+    // console.log("page = ", e.target.value);
+    setSelectedOption(e.target.value);
+    router.push(
+      `/truyen/${title}/chapter${e.target.value}?title=${title}&c=${e.target.value}`
+    );
+  };
   const router = useRouter();
   const elements: JSX.Element[] = [];
-  for (let i: number = 0; i < 100; i++) {
+  for (let i: number = 0; i < numberChapters; i++) {
     elements.push(
-      <option className="option" key={i}>
+      <option className="option" key={i} value={`${i + 1}`}>
         Chương {i + 1}
       </option>
     );
   }
   return (
     <>
-      <div className="w-full h-max bg-black">
+      <div className="w-full h-max">
         <div className="read_container">
           <div className="font-bold text-lg">
             Trang chủ / Manga / {props.params.chapter}
@@ -38,6 +105,15 @@ export default function Home(props: any) {
                 height: "45px",
               }}
               className="bg-blue-500 hover:bg-green-500"
+              onClick={() =>
+                Number(chapter) != 1
+                  ? router.push(
+                      `/truyen/${title}/chapter${
+                        Number(chapter) - 1
+                      }?title=${title}&c=${Number(chapter) - 1}`
+                    )
+                  : null
+              }
             >
               {"<--"}Chap trước
             </button>
@@ -50,13 +126,37 @@ export default function Home(props: any) {
                 marginLeft: "12px",
               }}
               className="bg-blue-500 hover:bg-green-500"
+              onClick={() =>
+                Number(chapter) != Number(numberChapters)
+                  ? router.push(
+                      `/truyen/${title}/chapter${
+                        Number(chapter) + 1
+                      }?title=${title}&c=${Number(chapter) + 1}`
+                    )
+                  : null
+              }
             >
               Chap sau{"-->"}
             </button>
           </div>
         </div>
 
-        <div className="read_content_manga">content manga</div>
+        <div className="read_content_manga">
+          {imageUrls != null &&
+            imageUrls.map((item: any, index: any) => {
+              return (
+                <div key={index}>
+                  <img
+                    src={`${item?.imagePath}`}
+                    alt=""
+                    width={100}
+                    height={100}
+                  />
+                  <br />
+                </div>
+              );
+            })}
+        </div>
 
         <div className="read_control">
           <div>
@@ -90,7 +190,15 @@ export default function Home(props: any) {
           <div>
             <svg
               className="hover:cursor-pointer"
-              onClick={() => router.refresh()}
+              onClick={() =>
+                Number(chapter) != 1
+                  ? router.push(
+                      `/truyen/${title}/chapter${
+                        Number(chapter) - 1
+                      }?title=${title}&c=${Number(chapter) - 1}`
+                    )
+                  : null
+              }
               xmlns="http://www.w3.org/2000/svg"
               height="1.5em"
               viewBox="0 0 512 512"
@@ -99,14 +207,28 @@ export default function Home(props: any) {
             </svg>
           </div>
           <div>
-            <select name="" id="" className="select">
+            <select
+              name=""
+              id=""
+              className="select"
+              onChange={handleSelectChange}
+              value={selectedOption}
+            >
               {elements}
             </select>
           </div>
           <div>
             <svg
               className="hover:cursor-pointer"
-              onClick={() => router.refresh()}
+              onClick={() =>
+                Number(chapter) != Number(numberChapters)
+                  ? router.push(
+                      `/truyen/${title}/chapter${
+                        Number(chapter) + 1
+                      }?title=${title}&c=${Number(chapter) + 1}`
+                    )
+                  : null
+              }
               xmlns="http://www.w3.org/2000/svg"
               height="1.5em"
               viewBox="0 0 512 512"

@@ -10,7 +10,7 @@ export default function HotManga() {
   return (
     <>
       <div className="hotmanga_container">
-        <h1 className="px-4">Truyện đề cử:</h1>
+        <h1 className="px-4 text-xl">Truyện đề cử:</h1>
         <div className="hotmanga_item px-2 gap-4">
           <Swiper
             modules={[Navigation, Pagination, Scrollbar, A11y]}
@@ -23,7 +23,7 @@ export default function HotManga() {
             <SwiperSlide>
               <div
                 style={{
-                  backgroundImage: 'url("/images/manga/example1.jpg")',
+                  backgroundImage: 'url("/images/manga/kageno_jitsu.jpg")',
                   width: "230px",
                   height: "245px",
                   position: "relative",
