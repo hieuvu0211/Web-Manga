@@ -6,6 +6,7 @@ import Footer from "@/components/footer";
 import React from "react";
 import { Roboto } from "next/font/google";
 import "tw-elements/dist/css/tw-elements.min.css";
+import Providers from "./provider";
 const inter = Inter({ subsets: ["latin"] });
 const roboto = Roboto({ weight: "400", subsets: ["latin"] });
 export const metadata: Metadata = {
@@ -21,9 +22,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={roboto.className}>
-        <Header />
-        {children}
-        <Footer />
+        <Providers>
+          <Header />
+          {children}
+          <Footer />
+        </Providers>
       </body>
     </html>
   );

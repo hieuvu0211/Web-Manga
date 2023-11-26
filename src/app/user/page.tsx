@@ -1,8 +1,13 @@
 "use client";
+import { signOut, useSession } from "next-auth/react";
 import "../../styles/user.scss";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 export default function Home() {
+  const { data: session } = useSession();
+  console.log(session);
+  const router = useRouter();
   return (
     <>
       <p
@@ -43,7 +48,7 @@ export default function Home() {
             </svg>
             Thông tin chung
           </div>
-          <div className="sidebar_child account">
+          <div className="sidebar_child account hover:cursor-pointer">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               height="1.2em"
@@ -54,7 +59,7 @@ export default function Home() {
             </svg>
             Tài khoản
           </div>
-          <div className="sidebar_child noitice">
+          {/* <div className="sidebar_child noitice hover:cursor-pointer">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               height="1.2em"
@@ -64,8 +69,11 @@ export default function Home() {
               <path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zm0-384c13.3 0 24 10.7 24 24V264c0 13.3-10.7 24-24 24s-24-10.7-24-24V152c0-13.3 10.7-24 24-24zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z" />
             </svg>
             Thông báo
-          </div>
-          <div className="sidebar_child change_password">
+          </div> */}
+          <div
+            className="sidebar_child change_password hover:cursor-pointer"
+            onClick={() => router.push(`/user/changepassword`)}
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               height="1.2em"
@@ -76,7 +84,10 @@ export default function Home() {
             </svg>
             Đổi mật khẩu
           </div>
-          <div className="sidebar_child exit">
+          <div
+            className="sidebar_child exit hover:cursor-pointer"
+            onClick={() => signOut()}
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               height="1.2em"
@@ -93,12 +104,12 @@ export default function Home() {
           <div className="user_information flex relative">
             <div className="user_text flex justify-start gap-3">
               <div>
-                <p>Username</p>
+                <p>Tên đăng nhập</p>
                 <p>Email</p>
               </div>
               <div className="">
-                <p>guest1</p>
-                <p>guest@gmail.com</p>
+                <p>{session?.user?.name}</p>
+                <p>{session?.user?.email}</p>
               </div>
             </div>
             <Link href="/user/changeinformation" className="link_changeinfo">

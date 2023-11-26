@@ -4,10 +4,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { signIn, signOut, useSession } from "next-auth/react";
 export default function Header() {
   const router = useRouter();
-  //do something with light
-  const [isDark, setIsDark] = useState<any>("");
+  const { data: session } = useSession();
   return (
     <>
       <div className="hed flex mx-auto items-center">
@@ -64,17 +64,28 @@ export default function Header() {
             </div>
           </div>
         </div>
-
-        <div className="hover-container">
-          <button className="bg-gray-800 hover:bg-gray-700 text-white font-bold py-1 px-3 border border-gray-700 hover:border-transparent rounded">
-            hi,guest
-          </button>
-          <ul className=" px-3 options">
-            <li onClick={() => router.push("/user")}>Trang cá nhân</li>
-            <li onClick={() => router.push("/truyen-theo-doi")}>Theo dõi</li>
-            <li>Đăng xuất</li>
-          </ul>
-        </div>
+        {session?.user ? (
+          <div className="hover-container">
+            <button className="bg-gray-800 hover:bg-gray-700 text-white font-bold py-1 px-3 border border-gray-700 hover:border-transparent rounded">
+              hi,{session.user.name}
+            </button>
+            <ul className=" px-3 options">
+              <li onClick={() => router.push("/user")}>Trang cá nhân</li>
+              <li onClick={() => router.push("/truyen-theo-doi")}>Theo dõi</li>
+              <li onClick={() => signOut()}>Đăng xuất</li>
+            </ul>
+          </div>
+        ) : (
+          <>
+            <button
+              type="button"
+              className="text-black font-bold bg-green-600 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg text-lg px-4 py-2 text-center mr-3 md:mr-0 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              onClick={() => signIn()}
+            >
+              Get started
+            </button>
+          </>
+        )}
       </div>
       <div className="navbar flex mx-auto px-44 items-center justify-around bg-gray-200">
         <div className="navbar_item navbar_home flex items-center justify-center">

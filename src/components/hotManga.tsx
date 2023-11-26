@@ -6,7 +6,21 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 export default function HotManga() {
+  const router = useRouter();
+  const [dataManga, setDataManga] = useState<any>();
+  useEffect(() => {
+    const getManga = async () => {
+      const res = await axios.get(`http://localhost:8000/api/manga`);
+      const listManga = await res.data;
+      setDataManga(listManga);
+    };
+    getManga();
+  }, []);
   return (
     <>
       <div className="hotmanga_container">
@@ -20,7 +34,28 @@ export default function HotManga() {
             pagination={{ clickable: true }}
             // scrollbar={{ draggable: true }}
           >
-            <SwiperSlide>
+            {dataManga &&
+              dataManga.map((item: any, index: number) => {
+                return (
+                  <SwiperSlide key={index}>
+                    <div
+                      style={{
+                        backgroundImage: `url(http://localhost:8000/manga/${item.title}/index.jpg)`,
+                        width: "230px",
+                        height: "245px",
+                        position: "relative",
+                      }}
+                      className="hotmanga_image overflow-auto hover:cursor-pointer"
+                      onClick={() => router.push(`/truyen/${item.title}`)}
+                    >
+                      <div className="hotmanga_name">
+                        <Link href={`/truyen/${item.title}`}>{item.title}</Link>
+                      </div>
+                    </div>
+                  </SwiperSlide>
+                );
+              })}
+            {/* <SwiperSlide>
               <div
                 style={{
                   backgroundImage: 'url("/images/manga/kageno_jitsu.jpg")',
@@ -34,8 +69,8 @@ export default function HotManga() {
                   <a href="#">Kage no Jitsuryokusha ni Naritakute</a>
                 </div>
               </div>
-            </SwiperSlide>
-            <SwiperSlide>
+            </SwiperSlide> */}
+            {/* <SwiperSlide>
               <div
                 style={{
                   backgroundImage: 'url("/images/manga/ex2.jpg")',
@@ -49,8 +84,8 @@ export default function HotManga() {
                   <a href="#">Gachiakuta</a>
                 </div>
               </div>
-            </SwiperSlide>
-            <SwiperSlide>
+            </SwiperSlide> */}
+            {/* <SwiperSlide>
               <div
                 style={{
                   backgroundImage: 'url("/images/manga/ex3.jpg")',
@@ -64,8 +99,8 @@ export default function HotManga() {
                   <a href="#">Kimi wa meido sama</a>
                 </div>
               </div>
-            </SwiperSlide>
-            <SwiperSlide>
+            </SwiperSlide> */}
+            {/* <SwiperSlide>
               <div
                 style={{
                   backgroundImage: 'url("/images/manga/ex4.jpg")',
@@ -79,8 +114,8 @@ export default function HotManga() {
                   <a href="#">Kajiki no ryourinin</a>
                 </div>
               </div>
-            </SwiperSlide>
-            <SwiperSlide>
+            </SwiperSlide> */}
+            {/* <SwiperSlide>
               <div
                 style={{
                   backgroundImage: 'url("/images/manga/ex5.jpg")',
@@ -94,8 +129,8 @@ export default function HotManga() {
                   <a href="#">Shishidou san ni shikararetai</a>
                 </div>
               </div>
-            </SwiperSlide>
-            <SwiperSlide>
+            </SwiperSlide> */}
+            {/* <SwiperSlide>
               <div
                 style={{
                   backgroundImage: 'url("/images/manga/ex6.jpg")',
@@ -109,8 +144,8 @@ export default function HotManga() {
                   <a href="#">Shishidou san ni shikararetai</a>
                 </div>
               </div>
-            </SwiperSlide>
-            <SwiperSlide>
+            </SwiperSlide> */}
+            {/* <SwiperSlide>
               <div
                 style={{
                   backgroundImage: 'url("/images/manga/ex7.jpg")',
@@ -124,7 +159,7 @@ export default function HotManga() {
                   <a href="#">Shishidou san ni shikararetai</a>
                 </div>
               </div>
-            </SwiperSlide>
+            </SwiperSlide> */}
           </Swiper>
         </div>
       </div>

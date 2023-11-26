@@ -82,6 +82,30 @@
     border: 0.5px solid rgba(12, 12, 12, 0.3);
     border-radius: 5px;
   }
+  input[type="password"] {
+    border: 0.5px solid rgba(12, 12, 12, 0.3);
+    border-radius: 5px;
+  }
+  .form_change{
+    .value_input{
+      background-color: black;
+    }
+  }
+  .button_submit{
+    width: 100px;
+    height: 30px;
+    border: 1px solid black;
+    color: green;
+    text-align: center;
+    border-radius: 10px;
+    float: right;
+    margin-right: 12%;
+    margin-top: 12px;
+    &:hover {
+      cursor: pointer;
+      background-color: aquamarine;
+    }
+  }
   .changeImage {
     width: 80%;
     height: 200px;
@@ -126,6 +150,8 @@
             color: transparent;
             outline: none;
           }
+          
     }
   }
+  
 }

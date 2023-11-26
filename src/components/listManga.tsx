@@ -20,7 +20,6 @@ export default function ListManga() {
     };
     getManga();
   }, []);
-  console.log("dataManga = ", dataManga);
   return (
     <>
       <div className="ml-1 font-semibold text-blue-700 font text-2xl">
@@ -33,7 +32,7 @@ export default function ListManga() {
               <div className="list_item items-center" key={index}>
                 <Link href={`/truyen/${item.title}`} className="cursor-pointer">
                   <img
-                    src={`http://localhost:8000/manga/${item.title}/index.jpg`}
+                    src={`http://localhost:8000/manga/${item?.title}/index.jpg`}
                     alt={"#"}
                     className="image_render"
                     width={170}
@@ -43,11 +42,11 @@ export default function ListManga() {
                     className="manga_title font-bold text-base cursor-pointer"
                     onClick={() =>
                       router.push(
-                        `/truyen/${item.title}/chapter1?title=${item.title}&c=1`
+                        `/truyen/${item.title}/chapter1?title=${item?.title}&c=1`
                       )
                     }
                   >
-                    {item.title}
+                    {item?.title}
                   </p>
                 </Link>
                 <p className="italic cursor-pointer">Chap 10</p>

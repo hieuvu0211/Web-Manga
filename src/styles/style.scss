@@ -10,5 +10,9 @@
   }
   .follow_container{
     grid-column: 5/7;
+    .fl_container{
+      overflow: hidden;
+      height: 585px;
+    }
   }
 }

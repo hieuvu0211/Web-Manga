@@ -14,7 +14,9 @@ export default function Home() {
       avatar && URL.revokeObjectURL(avatar.preview);
     };
   }, [avatar]);
-  console.log(avatar);
+  const handleChangeInfo = () => {
+    //do something with submit form
+  };
   return (
     <>
       <div className="change_container mx-auto">
@@ -44,6 +46,9 @@ export default function Home() {
             </label>
             <input id="upload" type="file" onChange={handleChangeImage} />
           </div>
+        </div>
+        <div className="button_submit" onClick={handleChangeInfo}>
+          submit
         </div>
       </div>
     </>

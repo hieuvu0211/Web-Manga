@@ -21,9 +21,7 @@ export default function Home(props: any) {
           `http://localhost:8000/${title}/chapter${chapter}`
         );
 
-        const numberOfChapter = await axios(
-          `http://localhost:8000/manga/${title}`
-        );
+        const numberOfChapter = await axios(`http://localhost:8000/${title}`);
         const soChapter = await numberOfChapter.data.numberChapter;
         setNumberChapters(soChapter);
         const result = await numberOfpage.data.number;
