@@ -1,5 +1,6 @@
 "use client";
 
+import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -9,10 +10,19 @@ export default function FollowManga() {
     let data: any = localStorage.getItem("manga");
     const ArrayData: any = JSON.parse(data);
     setListFollow(ArrayData);
-    console.log("ArrayData = ", ArrayData);
   }, []);
 
   const router = useRouter();
+
+  const handleRead = async (id: any) => {
+    try {
+      const res = await axios.get(`http://localhost:8080/api/book/${id}`);
+      const datapush = await res.data;
+      router.push(
+        `/truyen/${datapush.title}/chapter1?title=${datapush.title}&bookId=${datapush.id}&chapterId=${datapush.chapters[0]}`
+      );
+    } catch (error) {}
+  };
   return (
     <>
       <div className="fl_container relative mx-auto mt-1">
@@ -25,12 +35,21 @@ export default function FollowManga() {
             Xem tất cả
           </p>
         </div>
+        <div
+          className="absolute"
+          style={{
+            top: "40px",
+            left: "10px",
+          }}
+        >
+          Thêm theo dõi
+        </div>
         {listFollow &&
           listFollow.map((item: any, index: number) => {
             return (
               <div className="fl_content flex pl-3.5" key={index}>
                 <img
-                  src={`http://localhost:8000/manga/${item.title}/index.jpg`}
+                  src={`http://localhost:8080/api/book/cover-image?filename=${item.data.image}`}
                   alt={"#"}
                   width={100}
                   height={100}
@@ -41,7 +60,9 @@ export default function FollowManga() {
                     minWidth: "100px",
                   }}
                   onClick={() =>
-                    router.push(`http://localhost:3000/truyen/${item.title}`)
+                    router.push(
+                      `/truyen/${item.id}?chapterCount=${item.data.numberChapter}&filename=${item.data.image}`
+                    )
                   }
                 />
                 <div className="fl_content1">
@@ -51,21 +72,20 @@ export default function FollowManga() {
                       router.push(`http://localhost:3000/truyen/${item.title}`)
                     }
                   >
-                    {item.title}
+                    {item.data.title}
                   </h1>
                   <div className="fl_item2 flex items-center justify-between pl-3.5">
                     <p
                       className="font-noamal cursor-pointer hover:text-blue-600"
-                      onClick={() =>
-                        router.push(
-                          `/truyen/${item.title}/chapter1?title=${item.title}&c=1`
-                        )
-                      }
+                      onClick={() => handleRead(item.data.id)}
                     >
                       Đọc từ đầu
                     </p>
                   </div>
-                  <p className="pl-3.5 font-light italic cursor-pointer hover:text-purple-400">
+                  <p
+                    className="pl-3.5 font-light italic cursor-pointer hover:text-purple-400"
+                    onClick={() => handleRead(item.data.id)}
+                  >
                     Đọc tiếp
                   </p>
                 </div>

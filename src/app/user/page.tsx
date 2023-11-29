@@ -5,8 +5,16 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 export default function Home() {
-  const { data: session } = useSession();
-  console.log(session);
+  let InitData:any = {
+    jwt: "",
+    username: "",
+    email:""
+  }
+  if (!localStorage.getItem("login")) {
+    localStorage.setItem("login", JSON.stringify(InitData));
+  }
+  let data: any = localStorage.getItem("login");
+  const ArrayData: any = JSON.parse(data);
   const router = useRouter();
   return (
     <>
@@ -86,7 +94,10 @@ export default function Home() {
           </div>
           <div
             className="sidebar_child exit hover:cursor-pointer"
-            onClick={() => signOut()}
+            onClick={() => {
+              localStorage.removeItem('login');
+              router.push('/');
+            }}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -108,8 +119,8 @@ export default function Home() {
                 <p>Email</p>
               </div>
               <div className="">
-                <p>{session?.user?.name}</p>
-                <p>{session?.user?.email}</p>
+                <p>{ArrayData?.username}</p>
+                <p>{ArrayData?.email}</p>
               </div>
             </div>
             <Link href="/user/changeinformation" className="link_changeinfo">

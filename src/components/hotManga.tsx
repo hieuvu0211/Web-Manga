@@ -15,12 +15,13 @@ export default function HotManga() {
   const [dataManga, setDataManga] = useState<any>();
   useEffect(() => {
     const getManga = async () => {
-      const res = await axios.get(`http://localhost:8000/api/manga`);
+      const res = await axios.get(`http://localhost:8080/api/book/all?page=1`);
       const listManga = await res.data;
       setDataManga(listManga);
     };
     getManga();
   }, []);
+  dataManga && console.log(dataManga);
   return (
     <>
       <div className="hotmanga_container">
@@ -36,24 +37,36 @@ export default function HotManga() {
           >
             {dataManga &&
               dataManga.map((item: any, index: number) => {
-                return (
-                  <SwiperSlide key={index}>
-                    <div
-                      style={{
-                        backgroundImage: `url(http://localhost:8000/manga/${item.title}/index.jpg)`,
-                        width: "230px",
-                        height: "245px",
-                        position: "relative",
-                      }}
-                      className="hotmanga_image overflow-auto hover:cursor-pointer"
-                      onClick={() => router.push(`/truyen/${item.title}`)}
-                    >
-                      <div className="hotmanga_name">
-                        <Link href={`/truyen/${item.title}`}>{item.title}</Link>
+                let chapter = JSON.stringify(item.chapters);
+                let arrChapter = JSON.parse(chapter);
+                let len = arrChapter.length;
+                while (index < 7){
+                  return (
+                    <SwiperSlide key={index}>
+                      <div
+                        
+                        style={{
+                          // backgroundImage: `url(http://localhost:8080/api/book/cover-image?filename=${item.coverImage})`,
+                          width: "230px",
+                          height: "239px",
+                          position: "relative",
+                        }}
+                        className="hotmanga_image overflow-auto hover:cursor-pointer"
+                        onClick={() => router.push(`/truyen/${item.id}?chapterCount=${len}&filename=${item.coverImage}`)}
+                      >
+                        <img src={`http://localhost:8080/api/book/cover-image?filename=${item.coverImage}`} alt="img"
+                        style={{
+                          width: '100%',
+                          height: '100%',
+                        }} />
+                        <div className="hotmanga_name">
+                          <Link href={`/truyen/${item.id}?chapterCount=${len}&filename=${item.coverImage}`}>{item.title}</Link>
+                        </div>
                       </div>
-                    </div>
-                  </SwiperSlide>
-                );
+                    </SwiperSlide>
+                  );
+                }
+                
               })}
             {/* <SwiperSlide>
               <div

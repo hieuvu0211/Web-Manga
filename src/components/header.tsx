@@ -3,11 +3,24 @@ import "../styles/header.scss";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { signIn, signOut, useSession } from "next-auth/react";
+
 export default function Header() {
   const router = useRouter();
-  const { data: session } = useSession();
+  let InitData:any = {
+    jwt: "",
+    username: "",
+    email:""
+  }
+  if (!localStorage.getItem("login")) {
+    localStorage.setItem("login", JSON.stringify(InitData));
+  }
+  let data: any = localStorage.getItem("login");
+  const ArrayData: any = JSON.parse(data);
+  
+  const handleLogout = () => {
+    localStorage.removeItem("login");
+    window.location.reload();
+  }
   return (
     <>
       <div className="hed flex mx-auto items-center">
@@ -64,15 +77,15 @@ export default function Header() {
             </div>
           </div>
         </div>
-        {session?.user ? (
+        {ArrayData?.jwt != "" ? (
           <div className="hover-container">
             <button className="bg-gray-800 hover:bg-gray-700 text-white font-bold py-1 px-3 border border-gray-700 hover:border-transparent rounded">
-              hi,{session.user.name}
+              hi,{ArrayData.username}
             </button>
             <ul className=" px-3 options">
               <li onClick={() => router.push("/user")}>Trang cá nhân</li>
               <li onClick={() => router.push("/truyen-theo-doi")}>Theo dõi</li>
-              <li onClick={() => signOut()}>Đăng xuất</li>
+              <li onClick={handleLogout}>Đăng xuất</li>
             </ul>
           </div>
         ) : (
@@ -80,9 +93,9 @@ export default function Header() {
             <button
               type="button"
               className="text-black font-bold bg-green-600 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg text-lg px-4 py-2 text-center mr-3 md:mr-0 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-              onClick={() => signIn()}
+              onClick={() => router.push('/auth')}
             >
-              Get started
+              Đăng nhập
             </button>
           </>
         )}
@@ -98,15 +111,15 @@ export default function Header() {
             <path d="M575.8 255.5c0 18-15 32.1-32 32.1h-32l.7 160.2c0 2.7-.2 5.4-.5 8.1V472c0 22.1-17.9 40-40 40H456c-1.1 0-2.2 0-3.3-.1c-1.4 .1-2.8 .1-4.2 .1H416 392c-22.1 0-40-17.9-40-40V448 384c0-17.7-14.3-32-32-32H256c-17.7 0-32 14.3-32 32v64 24c0 22.1-17.9 40-40 40H160 128.1c-1.5 0-3-.1-4.5-.2c-1.2 .1-2.4 .2-3.6 .2H104c-22.1 0-40-17.9-40-40V360c0-.9 0-1.9 .1-2.8V287.6H32c-18 0-32-14-32-32.1c0-9 3-17 10-24L266.4 8c7-7 15-8 22-8s15 2 21 7L564.8 231.5c8 7 12 15 11 24z" />
           </svg>
         </div>
-        <div className="navbar_item">HOT</div>
-        <div className="navbar_item">THEO DÕI</div>
-        <div className="navbar_item">LỊCH SỬ</div>
+        <div className="navbar_item">HÀNH ĐỘNG</div>
+        <div className="navbar_item">HÀI HƯỚC</div>
+        <div className="navbar_item">PHIÊU LƯU</div>
         <div className="navbar_item hover_pseudo1 ">
           <div className="flex items-center">
-            THỂ LOẠI
-            <div className="arrow-down"></div>
+            VÕ THUẬT
+            {/* <div className="arrow-down"></div> */}
           </div>
-          <ul className="navbar_option1">
+          {/* <ul className="navbar_option1">
             <li className="option_item">Tất cả</li>
             <li className="option_item">Adult</li>
             <li className="option_item">Isekai</li>
@@ -117,14 +130,14 @@ export default function Header() {
             <li className="option_item">Manhua</li>
             <li className="option_item">Mecha</li>
             <li className="option_item">Drama</li>
-          </ul>
+          </ul> */}
         </div>
         <div className="navbar_item hover_pseudo2">
           <div className="flex items-center">
-            XẾP HẠNG
-            <div className="arrow-down"></div>
+            HUYỀN BÍ
+            {/* <div className="arrow-down"></div> */}
           </div>
-          <ul className="navbar_option2">
+          {/* <ul className="navbar_option2">
             <li className="option_item">Tất cả</li>
             <li className="option_item">Adult</li>
             <li className="option_item">Isekai</li>
@@ -135,11 +148,11 @@ export default function Header() {
             <li className="option_item">Manhua</li>
             <li className="option_item">Mecha</li>
             <li className="option_item">Drama</li>
-          </ul>
+          </ul> */}
         </div>
-        <div className="navbar_item">TÌM TRUYỆN</div>
-        <div className="navbar_item">GROUP</div>
-        <div className="navbar_item">FANPAGE</div>
+        <div className="navbar_item">TRINH THÁM</div>
+        <div className="navbar_item">VIỄN TƯỞNG</div>
+        <div className="navbar_item">DỊ GIỚI</div>
       </div>
     </>
   );

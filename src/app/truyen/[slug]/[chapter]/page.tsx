@@ -5,77 +5,63 @@ import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
 import axios from "axios";
 export default function Home(props: any) {
+  //chapter id
+  console.log(props.params.chapter);
   const searchParams = useSearchParams();
-  const chapter = searchParams.get("c");
+  const bookId = searchParams.get('bookId');
+  const chapterid = searchParams.get("chapterId");
   const title = searchParams.get("title");
   const [imageUrls, setImageUrls] = useState([null]);
   const [numberChapters, setNumberChapters] = useState<any>(null);
   const [selectedOption, setSelectedOption] = useState<any>();
+  const [max, setMax] = useState<any>();
+  const [min, setMin] = useState<any>();
   useEffect(() => {
-    setSelectedOption(`${chapter}`);
+    setSelectedOption(`${chapterid}`);
     const fetchData = async () => {
       // let numberOfpage: any;
       const newImageUrls: any[] = [];
       try {
-        const numberOfpage = await axios(
-          `http://localhost:8000/${title}/chapter${chapter}`
+        const getBookById = await axios(
+          `http://localhost:8080/api/book/${bookId}`
         );
-
-        const numberOfChapter = await axios(`http://localhost:8000/${title}`);
-        const soChapter = await numberOfChapter.data.numberChapter;
-        setNumberChapters(soChapter);
-        const result = await numberOfpage.data.number;
-        if (numberOfpage) {
-          for (let i = 0; i < result; i++) {
-            if (i < 9) {
-              try {
-                const response = await fetch(
-                  `http://localhost:8000/${title}/chapter${chapter}/0${i + 1}`
-                );
-                const data = await response.json();
-
-                newImageUrls.push(data);
-              } catch (error) {
-                console.error(`Error fetching image ${i + 1}:`, error);
-              }
-            } else {
-              try {
-                const response = await fetch(
-                  `http://localhost:8000/${title}/chapter${chapter}/${i + 1}`
-                );
-                const data = await response.json();
-
-                newImageUrls.push(data);
-              } catch (error) {
-                console.error(`Error fetching image ${i + 1}:`, error);
-              }
-            }
+        const chapters = await getBookById.data.chapters;
+        setMax(Math.max(...chapters))
+        setMin(Math.min(...chapters));
+        setNumberChapters(chapters);
+        console.log(getBookById.data);
+        
+          const getNumberImageChapter = await axios.get(`http://localhost:8080/api/chapter/${chapterid}`);
+          console.log("number Image Chapter: " , getNumberImageChapter.data);
+          for (let i = 0; i < getNumberImageChapter.data.numberOfImage; i++){
+              // console.log(i);
+              newImageUrls.push(`http://localhost:8080/api/chapter?chapterId=${chapterid}&fileId=${i + 1}`)
           }
-
           setImageUrls(newImageUrls);
-        }
       } catch (error) {
         console.log("failed fetching image");
       }
     };
     fetchData();
-  }, []);
+  }, [chapterid]);
+  // max && console.log("max = ", max);
+  // imageUrls && console.log(imageUrls);
   const handleSelectChange = (e: any) => {
-    // console.log("page = ", e.target.value);
+    console.log("page = ", e.target.value);
     setSelectedOption(e.target.value);
     router.push(
-      `/truyen/${title}/chapter${e.target.value}?title=${title}&c=${e.target.value}`
+      `/truyen/${title}/${props.params.chapter}?title=${title}&bookId=${bookId}&chapterId=${e.target.value}`
     );
   };
   const router = useRouter();
   const elements: JSX.Element[] = [];
-  for (let i: number = 0; i < numberChapters; i++) {
+  numberChapters && numberChapters.map((item:any, index:number) => {
     elements.push(
-      <option className="option" key={i} value={`${i + 1}`}>
-        Chương {i + 1}
+      <option className="option" key={index} value={`${item}`}>
+          Chương {index + 1}
       </option>
-    );
-  }
+    )
+  })
   return (
     <>
       <div className="w-full h-max">
@@ -104,11 +90,9 @@ export default function Home(props: any) {
               }}
               className="bg-blue-500 hover:bg-green-500"
               onClick={() =>
-                Number(chapter) != 1
+                Number(chapterid) > min
                   ? router.push(
-                      `/truyen/${title}/chapter${
-                        Number(chapter) - 1
-                      }?title=${title}&c=${Number(chapter) - 1}`
+                      `/truyen/${title}/${props.params.chapter}?title=${title}&bookId=${bookId}&chapterId=${Number(chapterid) - 1}`
                     )
                   : null
               }
@@ -125,11 +109,9 @@ export default function Home(props: any) {
               }}
               className="bg-blue-500 hover:bg-green-500"
               onClick={() =>
-                Number(chapter) != Number(numberChapters)
+                Number(chapterid) < max
                   ? router.push(
-                      `/truyen/${title}/chapter${
-                        Number(chapter) + 1
-                      }?title=${title}&c=${Number(chapter) + 1}`
+                      `/truyen/${title}/${props.params.chapter}?title=${title}&bookId=${bookId}&chapterId=${Number(chapterid) + 1}`
                     )
                   : null
               }
@@ -145,7 +127,7 @@ export default function Home(props: any) {
               return (
                 <div key={index}>
                   <img
-                    src={`${item?.imagePath}`}
+                    src={`${item}`}
                     alt=""
                     width={100}
                     height={100}
@@ -189,11 +171,9 @@ export default function Home(props: any) {
             <svg
               className="hover:cursor-pointer"
               onClick={() =>
-                Number(chapter) != 1
+                Number(chapterid) > min
                   ? router.push(
-                      `/truyen/${title}/chapter${
-                        Number(chapter) - 1
-                      }?title=${title}&c=${Number(chapter) - 1}`
+                      `/truyen/${title}/${props.params.chapter}?title=${title}&bookId=${bookId}&chapterId=${Number(chapterid) - 1}`
                     )
                   : null
               }
@@ -219,11 +199,9 @@ export default function Home(props: any) {
             <svg
               className="hover:cursor-pointer"
               onClick={() =>
-                Number(chapter) != Number(numberChapters)
+                Number(chapterid) < max
                   ? router.push(
-                      `/truyen/${title}/chapter${
-                        Number(chapter) + 1
-                      }?title=${title}&c=${Number(chapter) + 1}`
+                      `/truyen/${title}/${props.params.chapter}?title=${title}&bookId=${bookId}&chapterId=${Number(chapterid) + 1}`
                     )
                   : null
               }

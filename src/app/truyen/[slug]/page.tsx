@@ -1,10 +1,9 @@
 "use client";
 import "../../../styles/truyen.scss";
-import Image from "next/image";
-import Chapter from "@/app/truyen/chapter";
 import Comment from "@/app/truyen/comment";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import axios from "axios";
 import {
   AddToFollowList,
@@ -12,52 +11,69 @@ import {
   RemoveFromFollow,
 } from "@/components/handleFollowManga";
 export default function Home(props: any) {
+  interface parameters{
+    id: any;
+    numberChapter: any;
+    title: string,
+    image: any
+  }
+  const [dataFl, setDataFl] = useState<parameters>();
+  const searchParams = useSearchParams();
+  const chapterCount  = searchParams.get("chapterCount");
+  const filename = searchParams.get("filename");
   const data: any = props.params.slug;
   const router = useRouter();
-  console.log("porps = ", props.params.slug);
-  const [imageUrls, setImageUrls] = useState([null]);
   const [numberChapters, setNumberChapters] = useState<any>(null);
+  // console.log("porps = ", data);
+  const [dataBook, setDataBook] = useState<any>();
   const [isFollow, setIsFollow] = useState<boolean>(false);
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const numberOfpage = await axios(
-          `http://localhost:8000/${props.params.slug}`
+        const res = await axios(
+          `http://localhost:8080/api/book/${data}`
         );
-        const indexImage = await numberOfpage.data.imagePath;
-        const chapter = await numberOfpage.data.numberChapter;
-        setImageUrls(indexImage);
-        setNumberChapters(chapter);
+        setDataBook(res.data);
+        const chapters = await res.data.chapters;
+        setNumberChapters(chapters);
+        setDataFl({
+          id: res.data.id,
+          numberChapter: res.data.chapters.length,
+          title: res.data.title,
+          image: res.data.coverImage
+        })
+        setIsFollow(IsExistFollow({
+          title: res.data.title,
+        }))
       } catch (error) {
         console.log("failed fetching image");
       }
     };
     fetchData();
-
-    const isFollowManga = IsExistFollow(data);
-    setIsFollow(isFollowManga);
   }, []);
+  dataBook && console.log("dataBook", dataBook);
+  // numberChapters && console.log("numberChapters = ", numberChapters[0]);
   const elements: JSX.Element[] = [];
-  for (let i: number = 0; i < numberChapters; i++) {
+  for (let i: number = 0; i < Number(chapterCount); i++) {
     elements.push(
-      <div className="chapter_item">
+      <div className="chapter_item" key={i + 1}>
         <p
           onClick={() =>
             router.push(
-              `/truyen/${data}/chapter${i + 1}?title=${data}&c=${i + 1}`
+              `/truyen/${dataBook.title}/${props.params.slug}?title=${dataBook.title}&bookId=${dataBook.id}&chapterId=${numberChapters &&  numberChapters[i]}`
             )
           }
         >
           Chương {i + 1}
         </p>
-        <p>2/12/2023</p>
+        <p>{dataBook && dataBook.uploadAt}</p>
       </div>
     );
   }
 
   const handleFollowManga = () => {
-    const addManga: number = AddToFollowList(data);
-    console.log("addManga = ", addManga);
+    const addManga: number = AddToFollowList(dataFl);
+    // console.log("addManga = ", addManga);
     if (addManga === 1) {
       alert("Thêm truyện vào danh sách theo dõi thành công");
       window.location.reload();
@@ -67,7 +83,7 @@ export default function Home(props: any) {
   };
 
   const handleUnFollowManga = () => {
-    const removeManga: number = RemoveFromFollow(data);
+    const removeManga: number = RemoveFromFollow(dataFl);
     if (removeManga === 1) {
       alert("Bạn đã xóa truyện khỏi danh sách theo dõi thành công");
       window.location.reload();
@@ -79,12 +95,12 @@ export default function Home(props: any) {
     <>
       <div className="manga_container">
         <div className="manga_title text-2xl">
-          Trang chủ {">"} {data}
+          Trang chủ {">"} {dataBook && dataBook.title}
         </div>
         <div className="manga_content mt-2">
           <div className="manga_image">
             <img
-              src={`${imageUrls}`}
+              src={`http://localhost:8080/api/book/cover-image?filename=${filename}`}
               alt={""}
               width={250}
               height={250}
@@ -92,7 +108,7 @@ export default function Home(props: any) {
             />
           </div>
           <div className="manga_describe">
-            <div className="font-bold text-xl">{data}</div>
+            <div className="font-bold text-xl">{dataBook && dataBook.title}</div>
             <div className="manga_list_title">
               <div className="flex items-center">
                 <svg
@@ -104,7 +120,7 @@ export default function Home(props: any) {
                 </svg>
                 Tên khác
               </div>
-              <div className="font-bold flex items-center">{data}</div>
+              <div className="font-bold flex items-center">{dataBook && dataBook.title}</div>
               <div className="flex items-center">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -167,7 +183,8 @@ export default function Home(props: any) {
           <button
             className="bg-gray-300 hover:bg-green-500 flex items-center justify-center"
             onClick={() =>
-              router.push(`/truyen/${data}/chapter1?title=${data}&c=1`)
+              router.
+              push(`/truyen/${data}/chapter1?title=${data}&bookId=${dataBook.id}&chapterId=${dataBook.chapters[0]}`)
             }
           >
             <svg
@@ -240,10 +257,7 @@ export default function Home(props: any) {
             Giới thiệu
           </div>
           <div className="manga_introduce_content">
-            Một thiếu niên có ngoại hiệu vua ngủ phế vật, trong họa được phúc mở
-            ra một môn công pháp nghịch thiên. Từ nay về sau, một cái nhục thể
-            vô song kỳ tài, hoành áp thiên địa, kiếm trảm tinh thần, ngàn vạn kỳ
-            tài tại dưới chân hắn phủ phục run rẩy.
+            {dataBook && dataBook.description}
           </div>
         </div>
         <div className={`chapter_container`}>

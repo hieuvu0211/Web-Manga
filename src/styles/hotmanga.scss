@@ -3,11 +3,12 @@
   width: 100%;
   max-width: 1250px;
   height: 270px;
+  border-radius: 10px;
   .hotmanga_item{
     display: flex;
     flex-wrap: wrap;
     .hotmanga_image{
-      border-radius: 5px;
+      border-radius: 7px;
       transition: all 0.7 ease;
       &:hover{
         transform: scale(1.04);

@@ -1,7 +1,5 @@
 "use client";
-import { useState } from "react";
-import { signIn, signOut, useSession } from "next-auth/react";
-import { getToken } from "next-auth/jwt";
+import { useEffect, useState } from "react";
 import "../../styles/login.css";
 import { useRouter } from "next/navigation";
 import axios from "axios";
@@ -12,10 +10,15 @@ export default function Auth() {
     password: string;
     confirmPassword: string;
   }
-  const { data: session } = useSession();
-
-  // console.log({ session });
-  // console.log("get token = ", getToken);
+  let ArrayData:any = {
+    jwt: "",
+    username: "",
+    email: "",
+  }
+  if (!localStorage.getItem("login")) {
+    localStorage.setItem("login", JSON.stringify(ArrayData));
+  }
+  
   const [rightPanel, setRightPanel] = useState<any>();
   const [dataUser, setDataUser] = useState<IUser>({
     username: "",
@@ -32,11 +35,18 @@ export default function Auth() {
     setRightPanel("");
   };
   const handleLogin = async () => {
-    const user = await signIn("credentials", {
+    const res = await axios.post('http://localhost:8080/api/auth/signin',
+    {
       username: dataUser.username,
-      password: dataUser.password,
-      redirect: true,
-    });
+      password: dataUser.password
+    })
+    if(res.status == 200){
+      ArrayData.jwt = res.data.jwt;
+      ArrayData.username = res.data.username
+      ArrayData.email=res.data.email;
+      localStorage.setItem("login", JSON.stringify(ArrayData));
+      router.push('/');
+    };
   };
   const handleRegister = async () => {
     if (dataUser.password === dataUser.confirmPassword) {

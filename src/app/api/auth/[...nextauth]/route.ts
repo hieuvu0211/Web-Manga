@@ -1,3 +1,4 @@
+import axios from "axios";
 import NextAuth, { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
@@ -6,23 +7,20 @@ const options: NextAuthOptions = NextAuth({
     CredentialsProvider({
       name: "Credentials",
       credentials: {
-        username: { label: "Username", type: "text", placeholder: "jsmith" },
-        password: { label: "Password", type: "password" },
+        username: { label: "username", type: "text", placeholder: "jsmith" },
+        password: { label: "password", type: "password" },
       },
       async authorize(credentials, req) {
-        const res = await fetch("http://localhost:8000/api/auth/login", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+        const res = await fetch("http://localhost:8080/api/auth/signin", {
+          method: 'POST',
           body: JSON.stringify(credentials),
-        });
-        const json = await res.json();
-        if (res.ok && json) {
-          return json;
-        } else {
+          headers: { "Content-Type": "application/json" }
+        })
+        console.log(res.json());
+        if (res) {
+          return res.json();
+        } 
           return null;
-        }
       },
     }),
   ],
@@ -40,7 +38,7 @@ const options: NextAuthOptions = NextAuth({
       session.user = token;
       return session;
     },
-    async redirect({ url }) {
+    async redirect() {
       return "/";
     },
   },
